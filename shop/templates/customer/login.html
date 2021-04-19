@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="text-center h1 default">Login</div>
+<div class="container">
+<form method=post>
+{{form.csrf_token}}
+  <dl>
+    {{ render_field(form.username, class='form-control') }}
+    {{ render_field(form.password, class='form-control') }}
+    </dl>
+  <p><input type=submit value='login' class="btn btn-info">
+</form>
+<div class="conatiner">
+  <div class="row">
+    <div class="text-center mt-3"> You don't have an account?</div>
+
+    <form action="{{url_for('register')}}" >  
+    <div class="text-center mt-3">
+    <button type="submit" class="btn btn-danger">Sign up now!</button>
+    </div>
+    </form>
+    
+  </div>
+</div>
+
+{% endblock %}

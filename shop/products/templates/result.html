@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for product in products %}
+<div class="col-md-3 mt-5">
+    <div class="card">
+          
+          
+    
+      <img src="{{url_for('static', filename='images/' + product.image_1)}}" alt="{{product.name}}" class="card-img-top" height="200">
+        
+      <div class="card-body">
+      {% if product.discount > 0 %}
+        <h5 class="text-ceneter">Discount of {{product.discount}}%</h5>
+        <h5 class="text-center">{{product.name}}</h5>
+        <p class='text-center'>Price ${{product.price}}</p>
+        {% endif %}
+      </div>
+      <div class="card-footer">
+        <a href="{{url_for('brand.single_page', id=product.id)}}" class="btn btn-info" style="float: left;">details</a>
+
+        <form action="{{url_for('AddCarts')}}" method="POST">
+          <input type="hidden" name="product_id" value="{{product.id}}">
+          <button type="submit" class="btn btn-warning" style="float: right;">Add to cart </button>
+
+         
+          <input type="hidden" name="quantity" id="" value="1" min='1' max="{{product.stock}}">
+          {% set colors = product.colors.split(',') %}
+          
+          <select name="colors" id='' style="visibility: hidden;">
+              {% for color in colors %}
+              {% set col = product.colors.split(',') %}
+              <option value="{{col[0]}}">{{col[0]|capitalize}}</option>
+              {% endfor %}
+          </select>
+      </form>
+      </div>
+
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

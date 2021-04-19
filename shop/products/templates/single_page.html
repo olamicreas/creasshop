@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Olamicreas</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/products">Home</a>
+          </li>
+         
+          <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Brands
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for brand in brands %}
+              <li><a class="dropdown-item" href="{{url_for('brand.get_brand', id=brand.id)}}">{{brand.name}}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+
+          <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Categories
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for category in categories %}
+              <li><a class="dropdown-item" href="{{url_for('brand.get_category', id=category.id)}}">{{category.name}}</a></li>
+              {% endfor %}
+            </ul>
+            {% if current_user.is_authenticated %}
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('customer_logout')}}">Log out</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class='nav-link'  href="{{url_for('customerlogin')}}">Log in</a>
+          </li>
+          {% endif %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{url_for('Cart')}}" tabindex="-1">Cart ({{session['Shoppingcart']|length}})</a>
+          </li>
+        </ul>
+        <form action="{{url_for('brand.result')}}" class="d-flex" >
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</div>
+
+
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6" id="b_image">
+            <img src="{{url_for('static', filename='images/' + product.image_1)}}" alt='{{product.name}}' width="600">
+        </div>
+        <div class="col-md-6">
+            <h4>Product name: {{product.name}}</h4>
+            <br>
+            <p>Product price: ${{product.price}}</p>
+            {% if product.discount > 0 %}
+            <p>Product Discount {{product.discount}}%</p>
+            {% endif %}
+            <b>Product Discription</b>
+            <p>{{product.description}}</p>
+            <form action="{{url_for('AddCarts')}}" method="POST">
+              
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <button type="submit" class="btn btn-warning">Add to cart </button>
+
+                <label form="" >Quantity:</label>
+                <input type="number" name="quantity" id="" value="1" min='1' max="{{product.stock}}">
+                {% set colors = product.colors.split(',') %}
+                <label form="">Colors:</label>
+                <select name="colors" id=''>
+                    {% for color in colors %}
+                    {% set col = product.colors.split(',') %}
+                    <option value="{{col[0]}}">{{col[0]|capitalize}}</option>
+                    {% endfor %}
+                </select>
+            </form>
+                
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12" id="s_image" >
+            <img src="{{url_for('static', filename='images/' + product.image_1)}}" class="p-3" alt='{{product.name}}' height="190" width='200'>
+            <a href=""><img src="{{url_for('static', filename='images/' + product.image_2)}}" class="p-3"  alt='{{product.name}}' height="190" width='200'></a>
+            <img src="{{url_for('static', filename='images/' + product.image_2)}}" class='p-3' alt='{{product.name}}' height="190" width='200'>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var b_image = document.getElementById("b_image");
+    var s_image = document.getElementById("s_image").getElementsByTagName('img');
+    for(var i = 0; i < s_image.lenght; i++) {
+        s_image[i].addEventlistner('onclick', function(event){
+        let ImageSRC = this.getAttribute("src");
+        b_image.innerHTML = "<img src" + ImageSRC+">"
+    });
+    }
+  
+
+</script>
+
+
+
+
+{% endblock %}

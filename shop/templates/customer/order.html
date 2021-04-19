@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<br>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+        Invoice: {{orders.invoice}}
+        <br>
+        Status: {{orders.status}}
+        <br>
+        Customer's name: {{customer.name}}
+        <br>
+
+        Customer's email: {{customer.email}}
+        <br>
+        
+        <table class="table table.sm">
+            <thead>
+                <th>Sr</th>
+                
+                <th>Name</th>
+                <th>Color</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Discount</th>
+                <th>Subtotal</th>
+                
+            </thead>
+            <tbody>
+                {% for key ,product in orders.orders.items() %}
+                {% set discount = "%0.2f" |format((product.discount/100) * product.price|float) %}
+                <tr>
+                    
+                    <td>{{loop.index}}</td>
+                    
+                    <form action="{{url_for('updatecart', code=key)}}" method="POST">
+                        <td>{{product.name}}</td>
+                        <td>
+                            {{product.color}}
+                        </td>
+                        <td>${{product.price}}</td>
+                        <td>{{product.quantity}}</td>
+                        {% if product.discount > 0 %}
+                        <td>{{product.discount}}% &nbsp; is  ${{discount}}</td>
+                        {% else %}
+                        
+                        {% endif %}
+                        {% set subtotal = product.quantity|int * product.price|float %}
+                        <td>{{"%0.2f"|format((subtotal|float) - discount|float)}}</td>
+                    </form>   
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                
+                    <td>
+                      {% set amount = grandTotal.replace('.','') %}
+                      <div class="container">
+                        <form id="paymentForm" action='/payment' method="POST">
+                          
+                                 
+                          <input type="hidden" id="invoice" name="invoice" value="{{customer.invoice}}">
+                          <div class="form-group">
+                            
+                            <input type="hidden" name='user-email' value="{{customer.email}}" id="email-address" required />
+                          </div>
+                    
+                          <div class="form-group">
+                            
+                            <input type="hidden" id="amount" name="amount" value="{{grandTotal}}" required />
+                          </div>
+                          <div class="form-group">
+                           
+                            <input type="hidden" id="first-name" name="first-name" value="{{customer.name}}" />
+                          </div>
+                          <div class="form-group">
+                            
+                            <input type="hidden" id ='last-name' name="last-name" value="{{customer.name}}" />
+                          </div>
+                          <div class="form-submit">
+                            <button type="submit" onclick="payWithPaystack()" class="btn btn-success"> Pay Now </button>
+                          </div>
+                        </form>
+                        <script src="https://js.paystack.co/v1/inline.js"></script> 
+                        
+                      </div>
+                      <script>
+
+                        var paymentForm = document.getElementById('paymentForm');
+                        paymentForm.addEventListener('submit', payWithPaystack, false);
+                        function payWithPaystack() {
+                          var handler = PaystackPop.setup({
+                            key: 'pk_test_314dccd680068de3e230b7714972b3637607fbfb', // Replace with your public key
+                            email: document.getElementById('email-address').value,
+                            amount: document.getElementById('amount').value * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
+                            currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
+                            ref: document.getElementById('invoice'), // Replace with a reference you generated
+                            callback: function(response) {
+                              //this happens after the payment is completed successfully
+                              var reference = response.reference;
+                              alert('Payment complete! Reference: ' + reference);
+                              // Make an AJAX call to your server with the reference to verify the transaction
+                            },
+                            onClose: function() {
+                              alert('Transaction was not completed, window closed.');
+                            },
+                          });
+                          handler.openIframe();
+                        }
+
+
+
+
+
+
+                      </script>
+                      
+                </td>
+
+                          
+                        
+                       
+                    <td></td>
+                    <td colspan="3"><h5>Delivery fee: ${{deliveryFee}}</h4></td>
+                    <td colspan="3"><h4>Grand Total; &nbsp; &NonBreakingSpace; ${{grandTotal}}</h4></td>
+                    <td></td>
+                    <form action="{{url_for('clearcart')}}">
+                      <td><button class="btn btn-danger float-right mr-5">Clear Cart</button></td>
+                    </form>
+                </tr>
+                </tr>
+            </tfoot>
+      
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+
+
+{{session['Shoppingcart']}}

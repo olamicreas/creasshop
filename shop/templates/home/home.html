@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% block content %}
+{{ fontawesome_html() }}
+<style>
+    #movetxt {
+    position: relative;
+    -webkit-animation: forwards ;
+    animation: moving 5s forwards;
+    margin-bottom: 300px;
+    animation-name: example;
+    animation-duration: 5s;
+   
+    
+}
+
+    .card {
+        position: relative;
+        -webkit-animation: moving 5s forwards;
+        animation: moving 5s forwards;      
+        animation-name: cardone;
+        animation-duration: 2s;
+        font-weight: bold;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 20px;
+        
+    }
+    .card:hover {  
+        background-color: darkgray;
+    }  
+  
+
+    
+
+    
+    @keyframes example {
+        from {top: 0px;}
+        to {top: 200px;}
+        
+    
+    }
+    @keyframes cardone {
+        from {top: 100px;}
+        to {top: -30px;}
+        
+    }
+
+    #cart {
+        position: relative;
+        -webkit-animation: moving 5s infinite;
+        animation: moving 5s infinite;
+        animation-name: cart;
+
+    }
+
+    @keyframes cart{
+        0%{
+            left: 100px; top: 0px;
+        }
+
+        50%{
+            left:0px; right: 50px;
+        }
+        80%{
+            right: 0px;
+            left: 100px;
+        }
+        100%{
+            top: 0px;
+            left: 100px;
+        }
+    }
+
+    #body{
+        background-color:darkgray;
+        
+    }
+
+    .sidenav {
+        height: 100%;
+        width: 0px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+        text-align: center;
+        
+
+    }
+
+    .sidenav a{
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+    .sidenav a:hover {
+        color: #f1f1f1;
+    }
+
+    #closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+    .opennav{
+        text-align: center;
+        max-width: 100%;
+        font-weight: bold;
+    }
+
+      
+  
+    </style>
+<div id="body">
+<div class="sidenav" id="mySidenav">
+    <a href="javascript:void(0)" id="closebtn" onclick="closeNav()">&times;</a>
+    <a href="#">About</a>
+    <a href='#'>Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+</div>
+<div class="">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" style="font-weight: bolder; font-size: 20px; color: black;"  >CREAS <span style="color: brown;">SHOP</span><i class="fas fa-shopping-cart"></i></a>
+            <span style="font-size:30px;cursor:pointer" onclick="openNav()" class="opennav">&#9776;  </span>
+        </nav>
+            
+</div>
+<script>
+    function openNav() {
+        document.getElementById('mySidenav').style.width = '100%';
+        
+    }
+    function closeNav() {
+        document.getElementById('mySidenav').style.width = '0';
+
+    }
+</script>
+
+
+<div class="text-center" id=movetxt><h2>Welcome to Creas online Shop</h2></div>
+    <div class="text-center"><h2> Our Features </h2></div>
+    <div class='mt-5'>
+        
+        <div class="row">
+            <div class="card"  style="width: 32rem; margin: 7px; ">
+                <div class="card-header" style="margin: 50px;" ><span id="cart" class="fas fa-cart-arrow-down fa-5x"></span></div>
+
+                <div class="card-body text-ceneter" style="background-color: beige;">We have the best product here at Crease online shop,<br>shop with us and have no regret </div>
+            </div>
+            <div class="card "  style="width: 32rem; margin: 7px;">
+                <div class="card-header" style="margin: 50px;"><span id="cart" class="fas fa-car fa-5x"></span></div>
+
+                <div class="card-body text-ceneter" style="background-color: beige;" >We are very fast, and we deliver within 2-3 working days, any product sold out has a guarantee of 5 months</div>
+        
+            </div>
+            <div class="card"  style="width: 32rem; margin: 7px;" id="cardtwo">
+                <div class="card-header" style="margin: 50px;"><span id="cart" class="fas fa-credit-card fa-5x"></span></div>
+
+                <div class="card-body text-ceneter" style="background-color: beige;">Credit card payment is the only allowed payment method, Your credit card info is safe here</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="text-center col-md-12" style="margin-top: 50px;" id="cardthree">
+        <a class="btn btn-info" href="{{url_for('brand.home')}}">Start Shopping now <span class="fas fa-shopping-cart"></span></a>
+    </div>
+
+</div>
+    
+{% endblock %}
+
+

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'navbar.html' %}
+
+
+<div class="container">
+  <div class="row">
+    {% if brand %}
+    {% for b in brand %}
+      
+      <div class="col-md-3 mt-5">
+          <div class="card">  
+          
+            <img src="{{url_for('static', filename='images/' + b.image_1)}}" class='img-fluid w-100' alt="{{b.name}}" class="card-img-top" height="200">
+          
+            <div class="card-body">
+            {% if b.discount > 0 %}
+              <h5 class="text-ceneter">Discount of {{b.discount}}%</h5>
+              <h5 class="text-center">{{b.name}}</h5>
+              <p class='text-center'>Price ${{b.price}}</p>
+            {% endif %}
+            </div>
+            <div class="card-footer">
+              <a href="{{url_for('brand.single_page', id=b.id)}}" class=" btn btn-sm btn-primary">details</a> <a href="#" class="float-right btn  btn-sm btn-warning">Add to carts</a>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+    
+    
+
+    {% elif cats %}
+    {% for c in cats %}
+    
+    
+      <div class="col-md-3 mt-5">
+        <div class="card">  
+        
+          <img src="{{url_for('static', filename='images/' + c.image_1)}}" class='img-fluid w-100' alt="{{c.name}}" class="card-img-top" height="200">
+        
+          <div class="card-body">
+          {% if c.discount > 0 %}
+            <h5 class="text-ceneter">Discount of {{c.discount}}%</h5>
+            <h5 class="text-center">{{c.name}}</h5>
+            <p class='text-center'>Price ${{c.price}}</p>
+          {% endif %}
+          </div>
+          <div class="card-footer">
+            <a href="{{url_for('brand.single_page', id=c.id)}}" class="btn btn-sm btn-primary">details</a> <a href="#" class="float-right btn  btn-sm btn-warning">Add to carts</a>
+          </div>
+        </div>
+
+      </div>
+   {% endfor %}
+  
+
+      
+     
+  
+
+    
+
+
+
+    {% else %}
+
+  <div class="row">
+    {% for product in products.items %}
+    
+    <div class="col-md-3 mt-5">
+      <div class="card">
+            
+            
+      
+        <img src="{{url_for('static', filename='images/' + product.image_1)}}" alt="{{product.name}}" class="card-img-top" height="200">
+          
+        <div class="card-body">
+        {% if product.discount > 0 %}
+          <h5 class="text-ceneter">Discount of {{product.discount}}%</h5>
+          <h5 class="text-center">{{product.name}}</h5>
+          <p class='text-center'>Price ${{product.price}}</p>
+          {% endif %}
+        </div>
+        <div class="card-footer">
+          <a href="{{url_for('brand.single_page', id=product.id)}}" class="btn btn-info" style="float: left;">details</a>
+
+          <form action="{{url_for('AddCarts')}}" method="POST">
+            
+            <input type="hidden" name="product_id" value="{{product.id}}">
+            <button type="submit" class="btn btn-warning" style="float: right;">Add to cart </button>
+
+           
+            <input type="hidden" name="quantity" id="" value="1" min='1' max="{{product.stock}}">
+            {% set colors = product.colors.split(',') %}
+            
+            <select name="colors" id='' style="visibility: hidden;">
+                {% for color in colors %}
+                {% set col = product.colors.split(',') %}
+                <option value="{{col[0]}}">{{col[0]|capitalize}}</option>
+                {% endfor %}
+            </select>
+        </form>
+        </div>
+
+      </div>
+    </div>
+    
+    {% endfor %}
+    {% endif %}
+      <div class="row">
+        <div class="col text-center">
+        {% for page_num in products.iter_pages() %}
+        {% if page_num %}
+        {% if products.page == page_num %}
+        <a href="{{url_for('brand.home', page=page_num)}}" class="btn btn-outline-info btn-sm mt-3">{{page_num}}</a>
+        {% else %}
+        <a href="{{url_for('brand.home', page=page_num)}}" class="btn btn-outline-info btn-sm mt-3">{{page_num}}</a>
+          
+        {% endif %}
+        {% else %}
+        ...
+        {% endif %}
+        
+        {% endfor %}
+        </div>
+      </div>
+    
+
+  </div>
+
+
+
+</div>
+{% endblock %}
