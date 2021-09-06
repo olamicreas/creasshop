@@ -9,3 +9,4 @@ Flask-socketio==5.0.1
 Flask-WTF==0.14.2
 Flask_msearch
 Flask_moment
+Flask_fontawesome
